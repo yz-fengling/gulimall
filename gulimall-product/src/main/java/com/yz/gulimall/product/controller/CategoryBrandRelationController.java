@@ -1,15 +1,17 @@
 package com.yz.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yz.gulimall.product.entity.BrandEntity;
+import com.yz.gulimall.product.vo.BrandVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.yz.gulimall.product.entity.CategoryBrandRelationEntity;
 import com.yz.gulimall.product.service.CategoryBrandRelationService;
@@ -30,6 +32,32 @@ import com.yz.common.utils.R;
 public class CategoryBrandRelationController {
     @Autowired
     private CategoryBrandRelationService categoryBrandRelationService;
+
+    /**
+     * 获取当前品牌关联的所有分类列表
+     */
+    @GetMapping("/catelog/list")
+    //@RequiresPermissions("product:categorybrandrelation:list")
+    public R categorylist(@RequestParam("brandId")Long brandId){
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id",brandId));
+        return R.ok().put("data", data);
+    }
+
+    // /product/categorybrandrelation/brands/list
+    @GetMapping("/brands/list")
+    public R relationBrandsList(@RequestParam(value = "catId",required = true)Long catId){
+        List<BrandEntity> vos = categoryBrandRelationService.getBrandsByCatId(catId);
+        List<BrandVo> brandVos = vos.stream().map(item -> {
+            BrandVo brandVo = new BrandVo();
+            if( item!=null) {
+                brandVo.setBrandId(item.getBrandId());
+                brandVo.setBrandName(item.getName());
+            }
+            return brandVo;
+        }).collect(Collectors.toList());
+        return R.ok().put("data", brandVos);
+    }
 
     /**
      * 列表
@@ -54,14 +82,16 @@ public class CategoryBrandRelationController {
         return R.ok().put("categoryBrandRelation", categoryBrandRelation);
     }
 
+
+
     /**
      * 保存
      */
     @RequestMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
-
+//		categoryBrandRelationService.save(categoryBrandRelation);
+        categoryBrandRelationService.saveDetail(categoryBrandRelation);
         return R.ok();
     }
 

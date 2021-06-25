@@ -10,7 +10,10 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-
+  #json字符串格式化日期
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml
   global-config:
@@ -21,4 +24,11 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
 server:
   port: 10000
+
+feign:
+  hystrix:
+    enabled: false
+logging:
+  level:
+    com.yz.gulimall.product: debug
 

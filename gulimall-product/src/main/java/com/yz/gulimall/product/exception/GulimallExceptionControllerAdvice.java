@@ -14,8 +14,7 @@ import java.util.Map;
 
 //统一所有处理异常
 @Slf4j
-
-@RestControllerAdvice(basePackages = "com.yz.gulimall.product.controller")
+//@RestControllerAdvice(basePackages = "com.yz.gulimall.product.controller")
 public class GulimallExceptionControllerAdvice {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

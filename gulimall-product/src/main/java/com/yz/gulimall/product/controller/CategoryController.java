@@ -40,7 +40,7 @@ public class CategoryController {
     public R list(@RequestParam Map<String, Object> params){
         List<CategoryEntity> entities = categoryService.listWithTree();
 
-        return R.ok().put("list", entities);
+        return R.ok().put("data", entities);
     }
 
 
@@ -72,7 +72,8 @@ public class CategoryController {
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
+		//categoryService.updateById(category);
+        categoryService.updateCascade(category);
 
         return R.ok();
     }

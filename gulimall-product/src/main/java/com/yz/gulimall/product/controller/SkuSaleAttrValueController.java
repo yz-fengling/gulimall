@@ -23,7 +23,7 @@ import com.yz.common.utils.R;
  *
  * @author zhengyang
  * @email zhengyang@gmail.com
- * @date 2021-06-10 14:18:28
+ * @date 2021-06-19 15:08:54
  */
 @RestController
 @RequestMapping("product/skusaleattrvalue")
