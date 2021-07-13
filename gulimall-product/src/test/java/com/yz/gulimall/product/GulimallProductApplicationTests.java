@@ -3,20 +3,50 @@ package com.yz.gulimall.product;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.yz.gulimall.product.entity.BrandEntity;
+import com.yz.gulimall.product.service.AttrGroupService;
 import com.yz.gulimall.product.service.BrandService;
+import com.yz.gulimall.product.service.SkuSaleAttrValueService;
+import com.yz.gulimall.product.vo.SkuItemSaleAttrVo;
+import com.yz.gulimall.product.vo.SpuItemAttrGroupVo;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
+import java.util.List;
+@RunWith(SpringRunner.class)
 @SpringBootTest
 public class GulimallProductApplicationTests {
 
     @Autowired
     BrandService brandService;
+
+    @Autowired
+    RedissonClient redissonClient;
+
+    @Autowired
+    private AttrGroupService attrGroupService;
+
+    @Autowired
+    private SkuSaleAttrValueService skuSaleAttrValueService;
+
+    @Test
+    public void test1(){
+        List<SkuItemSaleAttrVo> saleAttrsBySpuId = skuSaleAttrValueService.getSaleAttrsBySpuId(7L);
+        System.out.println(saleAttrsBySpuId);
+//        List<SpuItemAttrGroupVo> spuId = attrGroupService.getAttrGroupWithAttrsBySpuId(7L, 225L);
+//        System.out.println(spuId);
+    }
+
+    @Test
+    public void rediss(){
+        System.out.println(redissonClient);
+    }
 
     @Test
     public void testUpload() throws FileNotFoundException {

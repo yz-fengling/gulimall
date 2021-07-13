@@ -38,11 +38,9 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
-        QueryWrapper<PurchaseEntity> wrapper = new QueryWrapper<>();
-        wrapper.eq("status",0).or().eq("status",1);
         IPage<PurchaseEntity> page = this.page(
                 new Query<PurchaseEntity>().getPage(params),
-                wrapper
+                new QueryWrapper<PurchaseEntity>()
         );
 
         return new PageUtils(page);
@@ -99,15 +97,16 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
         //改变采购单状态
         this.updateBatchById(collect);
 
+        //3、改变采购项的状态
         collect.forEach((item)->{
             List<PurchaseDetailEntity> entities = detailService.listDetailByPurchaseId(item.getId());
-            List<PurchaseDetailEntity> collect1 = entities.stream().map(entity -> {
+            List<PurchaseDetailEntity> detailEntities  = entities.stream().map(entity -> {
                 PurchaseDetailEntity detailEntity = new PurchaseDetailEntity();
                 detailEntity.setId(entity.getId());
-                detailEntity.setStatus(WareConstant.PurchaseDetailEnum.RECEIVE.getCode());
+                detailEntity.setStatus(WareConstant.PurchaseDetailEnum.BUYING.getCode());
                 return detailEntity;
             }).collect(Collectors.toList());
-            detailService.updateBatchById(collect1);
+            detailService.updateBatchById(detailEntities);
         });
     }
 
@@ -148,6 +147,16 @@ public class PurchaseServiceImpl extends ServiceImpl<PurchaseDao, PurchaseEntity
 
 
 
+    }
+
+    @Override
+    public PageUtils queryPageUnreceivePurchase(Map<String, Object> params) {
+        IPage<PurchaseEntity> page = this.page(
+                new Query<PurchaseEntity>().getPage(params),
+                new QueryWrapper<PurchaseEntity>().eq("status",0).or().eq("status",1)
+        );
+
+        return new PageUtils(page);
     }
 
 }

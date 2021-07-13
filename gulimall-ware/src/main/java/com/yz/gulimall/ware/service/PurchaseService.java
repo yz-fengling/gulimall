@@ -25,5 +25,7 @@ public interface PurchaseService extends IService<PurchaseEntity> {
     void receivedIds(List<Long> ids);
 
     void done(PurchaseDoneVo purchaseDoneVo);
+
+    PageUtils queryPageUnreceivePurchase(Map<String, Object> params);
 }
 
